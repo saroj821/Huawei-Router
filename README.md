@@ -26,11 +26,7 @@ It is designed for **IPTV, Internet, and NPIX peering** with secure authenticati
   - OSPF for internal routing
   - BGP for external peering
   - IP Prefix Lists for route filtering:
-    - `SkyBroadband-npix-prefix-in`
-    - `iptv-test-pool`
-    - `sajilo-net-npix-in`
-    - `Nextgeekers_prefix_in`
-    - `Ultranet_in`
+    
 
 - **Access Control**
   - ACL to restrict traffic and enforce security policies
