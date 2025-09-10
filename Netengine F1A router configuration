@@ -1,0 +1,106 @@
+! Huawei Router RTR-BDZR-01 Essential Configuration
+! Software Version V800R022C10SPC500
+
+# Hostname
+sysname RTR-BDZR-01
+
+# User Authentication
+local-user admin password irreversible-cipher ****
+telnet server enable
+ssh server enable
+ssh user admin authentication-type password
+
+# Interfaces
+interface Vlanif50
+ description LAN
+ ip address 192.168.50.1 255.255.255.0
+ undo shutdown
+
+interface Vlanif283
+ description BDZR-NEWR-P2P
+ ip address 10.251.0.123 255.255.255.254
+ undo shutdown
+
+interface Vlanif284
+ description BDZR-BAGR-P2P
+ ip address 10.251.0.125 255.255.255.254
+ undo shutdown
+
+interface Vlanif313
+ description BDZR-DSTR-P2P
+ ip address 10.251.0.182 255.255.255.254
+ undo shutdown
+
+interface Vlanif383
+ description P2P-UPLINK
+ ip address 10.252.0.70 255.255.255.254
+ undo shutdown
+
+interface Vlanif392
+ description P2P-TPTL-VIA-BROADLINK
+ ip address 10.252.0.93 255.255.255.254
+ undo shutdown
+
+interface Vlanif393
+ description P2P-BTWL-VIA-BROADLINK
+ ip address 10.252.0.94 255.255.255.254
+ undo shutdown
+
+interface Vlanif666
+ description Management
+ ip address 192.168.66.2 255.255.255.252
+ undo shutdown
+
+interface LoopBack0
+ description Loopback
+ ip address 192.168.199.60 255.255.255.255
+ undo shutdown
+
+# VLANs
+vlan 50
+ description LAN
+vlan 283
+ description P2P NEWR
+vlan 284
+ description P2P BAGR
+vlan 313
+ description P2P DSTR
+vlan 383
+ description UPLINK
+vlan 392
+ description P2P TPTL
+vlan 393
+ description P2P BTWL
+vlan 666
+ description MGMT
+
+# Routing (OSPF)
+ospf 1
+ router-id 192.168.199.60
+ area 0.0.0.0
+  network 10.251.0.122 0.0.0.1
+  network 10.251.0.124 0.0.0.1
+  network 10.251.0.126 0.0.0.1
+  network 10.251.0.182 0.0.0.1
+  network 10.252.0.70 0.0.0.1
+  network 10.252.0.92 0.0.0.1
+  network 10.252.0.94 0.0.0.1
+  network 192.168.199.60 0.0.0.0
+
+ip route-static 0.0.0.0 0.0.0.0 192.168.199.3
+
+# NTP
+ntp-service enable
+ntp-service unicast-server 192.168.199.3
+
+# SNMP
+snmp-agent
+snmp-agent community read-only ****
+
+# Logging
+info-center enable
+info-center loghost 192.168.38.5
+info-center timestamp log rfc-3339
+
+# Save configuration
+save
