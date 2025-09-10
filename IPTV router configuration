@@ -1,0 +1,101 @@
+# =====================================================
+# Huawei Router IPTV Configuration (Clean Export)
+# Device: rtr-iptv-01
+# Version: V200R021C00SPC100
+# =====================================================
+
+#
+sysname rtr-iptv-01
+#
+
+# ---------- System & Time ----------
+clock timezone GMT add 5:45
+ntp-service enable
+ntp-service unicast-server 192.168.1.1
+
+# ---------- AAA & Authentication ----------
+aaa
+ local-user admin password irreversible-cipher *****
+ local-user admin privilege level 15
+ authentication-scheme default
+ domain default
+#
+ssh server enable
+stelnet server enable
+sftp server enable
+
+# ---------- SNMP Monitoring ----------
+snmp-agent
+snmp-agent community read public
+snmp-agent community write private
+
+# ---------- VLAN Configuration ----------
+vlan batch 10 20 30 100
+#
+bridge-domain 10
+ bridge-domain 20
+ bridge-domain 30
+#
+
+# ---------- Interface Configuration ----------
+interface GigabitEthernet0/0/0
+ description Uplink-to-Core
+ ip address 10.10.10.1 255.255.255.0
+#
+interface GigabitEthernet0/0/1
+ description IPTV-Service
+ port link-type trunk
+ port trunk allow-pass vlan 20 30
+#
+interface Vlanif10
+ ip address 192.168.10.1 255.255.255.0
+#
+interface Vlanif20
+ ip address 192.168.20.1 255.255.255.0
+#
+interface Vlanif30
+ ip address 192.168.30.1 255.255.255.0
+#
+
+# ---------- Routing ----------
+ip routing
+
+# ---- IP Prefix Lists ----
+ip ip-prefix SkyBroadband-npix-prefix-in index 100 deny 0.0.0.0 0 less-equal 32
+ip ip-prefix iptv-test-pool index 5 permit 10.50.0.0 27
+ip ip-prefix iptv-test-pool index 500 deny 0.0.0.0 0 less-equal 32
+ip ip-prefix sajilo-net-npix-in index 5 permit 103.134.216.0 22 greater-equal 22 less-equal 24
+ip ip-prefix sajilo-net-npix-in index 10 permit 103.146.218.0 23 greater-equal 23 less-equal 24
+ip ip-prefix sajilo-net-npix-in index 15 permit 103.214.0.0 23 greater-equal 23 less-equal 24
+ip ip-prefix sajilo-net-npix-in index 100 deny 0.0.0.0 0 less-equal 32
+ip ip-prefix Nextgeekers_prefix_in index 5 permit 103.147.226.0 23 greater-equal 23 less-equal 24
+ip ip-prefix Nextgeekers_prefix_in index 100 deny 0.0.0.0 0 less-equal 32
+ip ip-prefix Ultranet_in index 5 permit 103.90.144.0 22 greater-equal 22 less-equal 24
+ip ip-prefix Ultranet_in index 500 deny 0.0.0.0 0 less-equal 32
+#
+
+# ---- OSPF ----
+ospf 1 router-id 1.1.1.1
+ area 0.0.0.0
+  network 10.10.10.0 0.0.0.255
+  network 192.168.10.0 0.0.0.255
+#
+
+# ---- BGP ----
+bgp 65001
+ peer 10.10.10.2 as-number 65002
+ peer 10.10.10.2 enable
+ network 192.168.20.0 mask 255.255.255.0
+ network 192.168.30.0 mask 255.255.255.0
+#
+
+# ---------- ACL & Security ----------
+acl number 3000
+ rule permit ip source 192.168.10.0 0.0.0.255
+ rule deny ip source any
+#
+traffic-filter inbound acl 3000
+
+# =====================================================
+# End of Config
+# =====================================================
