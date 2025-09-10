@@ -1,6 +1,6 @@
-# Huawei Router IPTV Configuration
+# Huawei Router  Configuration
 
-This repository contains the **cleaned and structured configuration** for the Huawei router **`rtr-iptv-01`**, running version **V200R021C00SPC100**.  
+This repository contains the **cleaned and structured configuration** for the Huawei router 
 It is designed for **IPTV, Internet, and NPIX peering** with secure authentication, routing policies, and monitoring enabled.
 
 ---
